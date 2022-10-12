@@ -46,6 +46,7 @@ bingoWordsShuffle.splice(12, 0, "CONF CALL 😷 BINGO");
 const range = [0, 1, 2, 3, 4];
 let completeRow = [];
 let completeCol = [];
+let isDiagonal = [];
 let temp;
 
 function App() {
@@ -59,8 +60,10 @@ function App() {
 
   useEffect(() => {
     setTimeout(() => {
-      setIsRun(false);
-    }, 3000);
+      if (isRun == true) {
+        setIsRun(false);
+      }
+    }, 5000);
   }, [isRun]);
 
   const isWon = (checked) => {
@@ -96,28 +99,38 @@ function App() {
       return true;
     }
 
+    let rangeLen = range.length - 1;
     if (
-      range.every((index) => {
-        return checked[index * 5 + index];
-      })
+      checked[rangeLen * 1] &&
+      checked[rangeLen * 2] &&
+      checked[rangeLen * 3] &&
+      checked[rangeLen * 4] &&
+      checked[rangeLen * 5] &&
+      !isDiagonal.includes(1)
     ) {
+      isDiagonal.push(1);
       return true;
     }
 
+    rangeLen = range.length + 1;
     if (
-      range.every((index) => {
-        return checked[index * 5 + 4 - index];
-      })
+      checked[rangeLen * 0] &&
+      checked[rangeLen * 1] &&
+      checked[rangeLen * 2] &&
+      checked[rangeLen * 3] &&
+      checked[rangeLen * 4] &&
+      !isDiagonal.includes(0)
     ) {
+      isDiagonal.push(0);
       return true;
     }
+
     return false;
   };
   const toggle = (id) =>
     setState((state) => {
       const checked = { ...state.checked, [id]: !state.checked[id] };
       const won = isWon(checked);
-      console.log("won : ", won);
       setIsRun(won);
 
       return {
